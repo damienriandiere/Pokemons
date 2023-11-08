@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-const pathPokedex = "./src/data/pokedex.json";
+const pathPokedex = "./src/models/pokedex.json";
 
 export function getPokemons() {
     const pokemons = JSON.parse(fs.readFileSync(pathPokedex).toString());
