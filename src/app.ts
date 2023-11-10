@@ -1,9 +1,9 @@
 import baseRoute from './api/baseRoute'; 
 import express from 'express';
+import bodyParser from 'body-parser';
 
 var helmet = require('helmet');
 require('dotenv').config();
-const bodyParser = require('body-parser');
 const app: express.Application = express();
 
 app.use(express.json());

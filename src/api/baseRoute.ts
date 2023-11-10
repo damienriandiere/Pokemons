@@ -16,11 +16,22 @@ router.post('/api/v1/login', (req: Request, res: Response) => {
     }
 });
 
+router.post('/api/v1/pokemons/create', (req: Request, res: Response)=> {
+    const body = req.body;
+    const pokemons = baseService.createPokemon(body);
+    res.status(200);
+});
 
 router.get('/api/v1/pokemons', (req: Request, res: Response)=> {
     const {page = 1} = req.query;
     const pokemons = baseService.pagination(parseInt(page.toString()));
+    res.status(200).json(pokemons);
+});
 
+router.get('/api/v1/pokemons/search', (req: Request, res: Response)=> {
+    const {nom = '', type = '', types = '', HP = 0} = req.query;
+    const typesArray = Array.isArray(types) ? types : [types];
+    const pokemons = baseService.search(String(nom), String(type), typesArray.map(String), parseInt(String(HP)));
     res.status(200).json(pokemons);
 });
 
