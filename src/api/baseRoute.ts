@@ -3,16 +3,23 @@ import * as baseService from '../services/baseService';
 
 const router = Router();
 
-router.get('/api/v1/pokemons', (req: Request, res: Response)=> {
-    const {page = 1} = req.query;
-    const pokemons = baseService.pagination(parseInt(page));
+router.post('/api/v1/login', (req: Request, res: Response) => {
+    const email = req.body.email;
 
-    res.status(200).json(pokemons);
+    const result = baseService.login(email);
+    if (result === false){
+        res.status(401).send('invalid credentials');
+    } else {
+        res.send(
+            result
+        );
+    }
 });
 
-router.get('/api/v1/pokemons/search', (req: Request, res: Response)=> {
-    const {nom = '', type = '', types = '', HP = 0} = req.query;
-    const pokemons = baseService.search(nom, type, types, parseInt(HP));
+
+router.get('/api/v1/pokemons', (req: Request, res: Response)=> {
+    const {page = 1} = req.query;
+    const pokemons = baseService.pagination(parseInt(page.toString()));
 
     res.status(200).json(pokemons);
 });
