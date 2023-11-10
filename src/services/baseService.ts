@@ -1,6 +1,7 @@
 import * as fs from "fs";
+require('dotenv').config();
 
-const pathPokedex = "./src/models/pokedex.json";
+const pathPokedex = process.env.PATH_POKEDEX;
 
 export function getPokemons() {
     const pokemons = JSON.parse(fs.readFileSync(pathPokedex).toString());
