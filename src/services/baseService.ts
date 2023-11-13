@@ -105,7 +105,7 @@ export function getPokemonID(id: number) {
 export function search(nom : string, type : string, types:string[], HP : number) {
     let pokemons = getPokemons();
     if ('' != nom) {
-        pokemons = pokemons.filter((pokemon : any) => pokemon.name.french === nom);
+        //pokemons = pokemons.filter((pokemon : any) => pokemon.name.french === nom);
     }
 
     if ('' != type) {
@@ -113,14 +113,14 @@ export function search(nom : string, type : string, types:string[], HP : number)
             types = [];
         }
         types = [...types, type]
-        pokemons = pokemons.filter((pokemon : any) => pokemon.type.includes(type));
+        //pokemons = pokemons.filter((pokemon : any) => pokemon.type.includes(type));
     }
 
     if (0 != HP){
         if (HP < 0) {
             return 'HP cannot be negative !';
         } else{
-            pokemons = pokemons.filter((pokemon : any) => pokemon.base.HP === HP);
+            //pokemons = pokemons.filter((pokemon : any) => pokemon.base.HP === HP);
         }
     }
 
