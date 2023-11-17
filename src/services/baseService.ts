@@ -1,35 +1,7 @@
 import * as fs from "fs";
-require('dotenv').config();
 import jwt from 'jsonwebtoken';
-import mongoose from 'mongoose';
+import Pokemon from '../models/pokemonModel';
 
-mongoose.connect('mongodb+srv://student:student@pokedex0.yhyr1o3.mongodb.net/pokedex?retryWrites=true&replicaSet=atlas-zf4fz1-shard-0&readPreference=primary&srvServiceName=mongodb&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1');
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'Erreur de connexion à la base de données :'));
-db.once('open', () => {
-  console.log('Connexion à la base de données établie.');
-});
-
-const pokemonSchema = new mongoose.Schema({
-    id: Number,
-    name: {
-      english: String,
-      japanese: String,
-      chinese: String,
-      french: String
-    },
-    type: [String],
-    base: {
-      HP: Number,
-      Attack: Number,
-      Defense: Number,
-      "Sp. Attack": Number,
-      "Sp. Defense": Number,
-      Speed: Number
-    }
-  });
-
-const Pokemon = mongoose.model('pokemons', pokemonSchema);
 const pathPokedex = process.env.PATH_POKEDEX;
 const pathUsers = process.env.PATH_USERS;
 
@@ -75,54 +47,52 @@ export function createPokemon(body: any){
     nouveauPokemon.save();
 }
 
-export function getPokemons() {
-    return Pokemon.find();
+export async function getPokemons() {
+    const pokemons = await Pokemon.find();
+    return pokemons;
 }
 
-export function pagination(page: number){
+export async function pagination(page: number){
     if (page < 1 || page > 81) {
         return 'The page number ' + page + ' does not exist !'; 
     } else {
-        //const pokemons = getPokemons().slice((page - 1)*10, page * 10);
-        //return pokemons;
+        const pokemons = await Pokemon.find().skip((page - 1)*10).limit(10);
+        return pokemons;
     }
 
 }
 
-export function getPokemonID(id: number) {
-    let pokemons = getPokemons();
+export async function getPokemonID(id: number) {
+    const pokemon = await Pokemon.findOne({ id: id });
 
-    pokemons = pokemons.find((pokemon : any) => pokemon.id === id);
-
-    if (pokemons === undefined){
+    if (pokemon === undefined){
         console.log('Pokemon not found with the ID : ', id);
         return 'Pokemon not found with the ID : ' + id;
     } else {
-        return pokemons;
+        return pokemon;
     }
 }
 
-export function search(nom : string, type : string, types:string[], HP : number) {
-    let pokemons = getPokemons();
-    if ('' != nom) {
-        //pokemons = pokemons.filter((pokemon : any) => pokemon.name.french === nom);
-    }
-
-    if ('' != type) {
-        if (types.length = 0){
-            types = [];
+export async function search(nom : string, type : string, types:string[], HP : number) {
+    try{
+        let query: any = {};
+        if (nom) {
+            query['name.french'] = new RegExp(nom, 'i');
         }
-        types = [...types, type]
-        //pokemons = pokemons.filter((pokemon : any) => pokemon.type.includes(type));
-    }
-
-    if (0 != HP){
-        if (HP < 0) {
-            return 'HP cannot be negative !';
-        } else{
-            //pokemons = pokemons.filter((pokemon : any) => pokemon.base.HP === HP);
+    
+        if (type) {
+            types.push(type);
+            query.type = { $in: types };
         }
+    
+        if (HP > 0) {
+            query['base.HP'] = { $gte: HP };
+        }
+    
+        const pokemons = await Pokemon.find(query).exec();
+        return pokemons;
+    } catch (error) {
+      console.error('Error searching pokemons:', error);
+      throw error;
     }
-
-    return pokemons;
 }
