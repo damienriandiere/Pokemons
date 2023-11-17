@@ -6,7 +6,33 @@ const router = Router();
 router.post('/api/v1/pokemons/create', (req: Request, res: Response)=> {
     const body = req.body;
     const pokemons = pokemonService.createPokemon(body);
-    res.status(200);
+    if (pokemons) {
+        res.status(200);
+    } else {
+        res.status(404);
+    }
+});
+
+router.post('/api/v1/pokemons/delete', async (req: Request, res: Response)=> {
+    const {id = ''} = req.query;
+    const pokemons = await pokemonService.deletePokemonById(parseInt(String(id)));
+    if (pokemons) {
+        res.status(200);
+    } else {
+        res.status(404);
+    }
+});
+
+
+router.post('/api/v1/pokemons/update', async (req: Request, res: Response)=> {
+    const {id = ''} = req.query;
+    const body = req.body;
+    const pokemons = await pokemonService.updatePokemonById(parseInt(String(id)), body);
+    if (pokemons) {
+        res.status(200);
+    } else {
+        res.status(404);
+    }
 });
 
 router.get('/api/v1/pokemons/search', async (req: Request, res: Response)=> {

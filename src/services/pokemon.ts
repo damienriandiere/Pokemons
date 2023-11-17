@@ -1,26 +1,89 @@
 import Pokemon from '../models/pokemonModel';
 
-export function createPokemon(body: any){
-    const nouveauPokemon = new Pokemon({
+export async function createPokemon(body: any){
+    try {
+      const nouveauPokemon = new Pokemon({
         id: body.id,
         name: {
           english: body.name.english,
           japanese: body.name.japanese,
           chinese: body.name.chinese,
-          french: body.name.french
+          french: body.name.french,
         },
         type: body.type,
         base: {
           HP: body.base.HP,
           Attack: body.base.Attack,
           Defense: body.base.Defense,
-          "Sp. Attack": body.base["Sp. Attack"],
-          "Sp. Defense": body.base["Sp. Defense"],
-          Speed: body.base.Speed
-        }
-    });
-    nouveauPokemon.save();
+          'Sp. Attack': body.base['Sp. Attack'],
+          'Sp. Defense': body.base['Sp. Defense'],
+          Speed: body.base.Speed,
+        },
+      });
+  
+      await nouveauPokemon.save();
+      console.log('Pokemon created successfully');
+      return true;
+    } catch (error) {
+      console.error('Error creating Pokemon:', error);
+      return false; 
+    }
 }
+
+export async function deletePokemonById(pokemonId: number){
+    try {
+      const deletedPokemon = await Pokemon.findOneAndDelete({ id: pokemonId });
+  
+      if (deletedPokemon) {
+        console.log(`Pokemon with ID ${pokemonId} deleted successfully.`);
+        return true;
+      } else {
+        console.log(`Pokemon with ID ${pokemonId} not found.`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error deleting Pokemon :', error);
+      return false;
+    }
+};
+
+export async function updatePokemonById(pokemonId: number, body: any){
+    try {
+      const updatedPokemon = await Pokemon.findOneAndUpdate(
+        { id: pokemonId },
+        {
+            name : {
+            english: body.name.english,
+            japanese: body.name.japanese,
+            chinese: body.name.chinese,
+            french: body.name.french
+            },
+            type: body.type,
+            base: {
+                HP: body.base.HP,
+                Attack: body.base.Attack,
+                Defense: body.base.Defense,
+                "Sp. Attack": body.base["Sp. Attack"],
+                "Sp. Defense": body.base["Sp. Defense"],
+                Speed: body.base.Speed
+            }
+        },
+        { new: true }
+      );
+  
+      if (updatedPokemon) {
+        console.log(`Pokemon with ID ${pokemonId} updated successfully`);
+        console.log(updatedPokemon);
+        return true;
+      } else {
+        console.log(`Pokemon with ID ${pokemonId} not found`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error updating Pokemon:', error);
+      return false;
+    }
+  };
 
 export async function getPokemons() {
     const pokemons = await Pokemon.find();
@@ -37,12 +100,12 @@ export async function pagination(page: number){
 
 }
 
-export async function getPokemonID(id: number) {
-    const pokemon = await Pokemon.findOne({ id: id });
+export async function getPokemonID(pokemonId: number) {
+    const pokemon = await Pokemon.findOne({ id: pokemonId });
 
     if (pokemon === undefined){
-        console.log('Pokemon not found with the ID : ', id);
-        return 'Pokemon not found with the ID : ' + id;
+        console.log('Pokemon not found with the ID : ', pokemonId);
+        return 'Pokemon not found with the ID : ' + pokemonId;
     } else {
         return pokemon;
     }
