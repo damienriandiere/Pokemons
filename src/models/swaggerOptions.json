@@ -1,0 +1,11 @@
+{
+    "definition": {
+      "openapi": "3.0.0",
+      "info": {
+        "title": "Votre API",
+        "version": "1.0.0",
+        "description": "Description de votre API"
+      }
+    },
+    "apis": ["src/routes/*.ts"]
+  }
