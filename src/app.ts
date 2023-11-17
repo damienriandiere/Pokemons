@@ -4,7 +4,8 @@ const helmet = require('helmet');
 const dotenv = require('dotenv');
 const SwaggerUI = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
-import baseRoute from './api/baseRoute';
+import AuthController from './api/auth';
+import PokemonController from './api/pokemon';
 import { connectDB } from './loaders/mongoose';
 
 dotenv.config();
@@ -16,7 +17,8 @@ connectDB();
 // Use middleware
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(baseRoute);
+app.use(AuthController);
+app.use(PokemonController);
 
 // Set up Swagger options
 const swaggerOptions = {
