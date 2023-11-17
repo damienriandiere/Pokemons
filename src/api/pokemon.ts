@@ -3,9 +3,9 @@ import * as pokemonService from '../services/pokemon';
 
 const router = Router();
 
-router.post('/api/v1/pokemons/create', (req: Request, res: Response)=> {
+router.post('/api/v1/pokemons/create', async (req: Request, res: Response)=> {
     const body = req.body;
-    const pokemons = pokemonService.createPokemon(body);
+    const pokemons = await pokemonService.createPokemon(body);
     if (pokemons) {
         res.status(200);
     } else {
