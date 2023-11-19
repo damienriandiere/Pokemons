@@ -1,11 +1,349 @@
 {
-    "definition": {
-      "openapi": "3.0.0",
-      "info": {
-        "title": "Votre API",
-        "version": "1.0.0",
-        "description": "Description de votre API"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pokemon API",
+    "version": "1.0",
+    "description": "TP Initiation à l'API REST avec NodeJS, Express et MongoDB"
+  },
+  "servers": [
+    {"url": "http://localhost:3000/api/v1"}
+  ],
+  "security": [
+    {"BearerAuth": []}
+  ],
+  "paths": {
+    "/auth/me": {
+      "get": {
+        "summary": "Récupérer l'utilisateur connecté",
+        "tags": ["auth"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
       }
     },
-    "apis": ["src/routes/*.ts"]
+    "/auth/login": {
+      "post": {
+        "summary": "Se connecter",
+        "tags": ["auth"],
+        "security": [],
+        "requestBody": {
+          "description": "Couple email, mot de passe",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Rafraichir l'access token",
+        "tags": ["auth"],
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pokemons": {
+      "get": {
+        "summary": "Récupérer tous les pokémons existant",
+        "description": "Récupérer tous les pokémons existant",
+        "tags": ["pokemon"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Numéro de la page",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pokemons/{id}": {
+      "get": {
+        "summary": "Récupérer un pokemon selon son identifiant",
+        "description": "Récupérer un pokemon selon son identifiant",
+        "tags": ["pokemon"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Identifiant du pokémon",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pokemons/update": {
+      "get": {
+        "summary": "Mettre à jour un pokémon selon son identifiant",
+        "description": "Mettre à jour un pokémon dans la base de données",
+        "tags": ["pokemon"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Identifiant",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Identifiant n'existe pas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pokemons/search": {
+      "get": {
+        "summary": "Récupérer des pokémons selon certains paramètres",
+        "description": "Récupérer des pokémons selon certains paramètres",
+        "tags": ["pokemon"],
+        "security": [],
+        "parameters": [
+          {
+            "name": "nom",
+            "in": "query",
+            "description": "Nom du pokémon",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type du pokémon",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TypesEnum"
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "description": "Différents types du pokémon",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TypesEnum"
+              }
+            }
+          },
+          {
+            "name": "hp",
+            "in": "query",
+            "description": "HP du pokémon",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "type": "number"
+          },
+          "refreshExpiresIn": {
+            "type": "number"
+          }
+        }
+      },
+      "TypesEnum": {
+        "type": "string",
+        "enum": [
+          "Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fairy","Fighting","Psychic","Rock","Steel","Ice","Ghost"
+        ]
+      }
+    }
   }
+}
