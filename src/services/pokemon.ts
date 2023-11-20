@@ -112,10 +112,10 @@ export async function getPokemonID(pokemonId: number) {
   const pokemon = await Pokemon.findOne({ id: pokemonId });
 
   if (pokemon === undefined) {
-    logger.warn('Pas de pokémon trouvé avec l\'id : ', pokemonId);
+    logger.warn(`Pas de pokémon trouvé avec l\'id : ${pokemonId}`);
     return 'Pokemon not found with the ID : ' + pokemonId;
   } else {
-    logger.info('Correspondance trouvé avec l\'id : ', pokemonId);
+    logger.info(`Correspondance trouvé avec l\'id : ${pokemonId}`);
     return pokemon;
   }
 }
