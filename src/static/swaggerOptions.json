@@ -6,16 +6,22 @@
     "description": "TP Initiation à l'API REST avec NodeJS, Express et MongoDB"
   },
   "servers": [
-    {"url": "http://localhost:3000/api/v1"}
+    {
+      "url": "http://localhost:3000/api/v1"
+    }
   ],
   "security": [
-    {"BearerAuth": []}
+    {
+      "BearerAuth": []
+    }
   ],
   "paths": {
     "/auth/me": {
       "get": {
         "summary": "Récupérer l'utilisateur connecté",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -48,7 +54,9 @@
     "/auth/login": {
       "post": {
         "summary": "Se connecter",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "security": [],
         "requestBody": {
           "description": "Couple email, mot de passe",
@@ -96,7 +104,9 @@
     "/auth/refresh": {
       "post": {
         "summary": "Rafraichir l'access token",
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "security": [],
         "requestBody": {
           "required": true,
@@ -141,7 +151,9 @@
       "get": {
         "summary": "Récupérer tous les pokémons existant",
         "description": "Récupérer tous les pokémons existant",
-        "tags": ["pokemon"],
+        "tags": [
+          "pokemon"
+        ],
         "security": [],
         "parameters": [
           {
@@ -176,7 +188,9 @@
       "get": {
         "summary": "Récupérer un pokemon selon son identifiant",
         "description": "Récupérer un pokemon selon son identifiant",
-        "tags": ["pokemon"],
+        "tags": [
+          "pokemon"
+        ],
         "security": [],
         "parameters": [
           {
@@ -207,7 +221,9 @@
       "get": {
         "summary": "Mettre à jour un pokémon selon son identifiant",
         "description": "Mettre à jour un pokémon dans la base de données",
-        "tags": ["pokemon"],
+        "tags": [
+          "pokemon"
+        ],
         "security": [],
         "parameters": [
           {
@@ -252,7 +268,9 @@
       "get": {
         "summary": "Récupérer des pokémons selon certains paramètres",
         "description": "Récupérer des pokémons selon certains paramètres",
-        "tags": ["pokemon"],
+        "tags": [
+          "pokemon"
+        ],
         "security": [],
         "parameters": [
           {
@@ -341,7 +359,22 @@
       "TypesEnum": {
         "type": "string",
         "enum": [
-          "Grass","Poison","Fire","Flying","Water","Bug","Normal","Electric","Ground","Fairy","Fighting","Psychic","Rock","Steel","Ice","Ghost"
+          "Grass",
+          "Poison",
+          "Fire",
+          "Flying",
+          "Water",
+          "Bug",
+          "Normal",
+          "Electric",
+          "Ground",
+          "Fairy",
+          "Fighting",
+          "Psychic",
+          "Rock",
+          "Steel",
+          "Ice",
+          "Ghost"
         ]
       }
     }

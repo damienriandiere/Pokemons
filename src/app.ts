@@ -2,8 +2,9 @@ import 'dotenv/config';
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
-import {connectDB} from './loaders/mongoose';
+import { connectDB } from './loaders/mongoose';
 import routes from './loaders/routes';
+const logger = require('./loggers/loggers');
 
 (async () => {
   await connectDB();
@@ -18,5 +19,5 @@ routes(app);
 const PORT = process.env.PORT || 3000;
 const LINK = process.env.URL || 'http://localhost';
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${LINK}${PORT}`);
+  logger.info(`Serveur lancé à l\'adresse suivante : ${LINK}${PORT}`);
 });

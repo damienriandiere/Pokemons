@@ -1,4 +1,4 @@
-import mongoose, {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const PokemonSchema = new Schema({
     id: Number,
@@ -17,7 +17,7 @@ const PokemonSchema = new Schema({
         "Sp. Defense": Number,
         Speed: Number
     }
-  });
+});
 
 const Pokemon = mongoose.model('pokemons', PokemonSchema);
 

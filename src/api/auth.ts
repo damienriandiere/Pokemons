@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import {checkRefresh, createTokens, isAuthenticated} from "../services/auth";
-import {AuthenticatedRequest} from "../types";
-import {getUserByEmail} from "../models/user";
+import { checkRefresh, createTokens, isAuthenticated } from "../services/auth";
+import { AuthenticatedRequest } from "../types";
+import { getUserByEmail } from "../models/user";
 const router = Router();
 
 router.get("/me", isAuthenticated, (req: AuthenticatedRequest, res) => {
@@ -14,10 +14,10 @@ router.post("/login", (req, res) => {
    if (!password) return res.status(400).json({ success: false, message: "Veuillez fournir un mot de passe" });
 
    const user = getUserByEmail(email);
-   if (!user) return res.status(404).json({ success: false, message: "Aucun utilisateur trouvé pour cette adresse mail !"});
+   if (!user) return res.status(404).json({ success: false, message: "Aucun utilisateur trouvé pour cette adresse mail !" });
 
    if (password != user.password) {
-      return res.status(401).json({ success: false, message: 'Mauvaise addresse mail ou mauvais mot de passe !'});
+      return res.status(401).json({ success: false, message: 'Mauvaise addresse mail ou mauvais mot de passe !' });
    }
 
    return res.json({
