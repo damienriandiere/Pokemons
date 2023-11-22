@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import * as pokemonService from '../services/pokemon';
+import { parse } from "dotenv";
 
 const logger = require('../loggers/loggers');
 const router = Router();
@@ -61,13 +62,19 @@ router.get('/api/v1/pokemons/search', async (req: Request, res: Response) => {
 
 router.get('/api/v1/pokemons/:page', async (req: Request, res: Response) => {
     logger.info('Go to /api/v1/pokemons/:page')
-    const { page = 1 } = req.params;
-    logger.info('Numéro de page : ' + page)
-    try{
-        const pokemons = await pokemonService.pagination(parseInt(page.toString()));
-        res.status(200).json(pokemons);
-    } catch (error) {
-        res.status(404).json(error);
+    const { page = '1' } = req.params;
+    const page_number = parseInt(page);
+    if (isNaN(page_number)) {
+        logger.error('La page demandée n\'existe pas : ', page)
+        res.status(404).json('The page number ' + page + ' does not exist !');
+    } else {
+        logger.info('Numéro de page : ' + page)
+        try{
+            const pokemons = await pokemonService.pagination(parseInt(page));
+            res.status(200).json(pokemons);
+        } catch (error) {
+            res.status(404).json(error);
+        }
     }
 });
 
@@ -75,12 +82,15 @@ router.get('/api/v1/pokemon/:id', async (req: Request, res: Response) => {
     logger.info('Go to /api/v1/pokemon/:id')
     const { id = '' } = req.params;
     logger.info('id : ' + id)
-    const pokemonID = await pokemonService.getPokemonID(parseInt(id));
-
-    if ("Pokemon not found" == pokemonID) {
-        res.status(404);
-    } else {
-        res.status(200).json(pokemonID);
+    try{
+        const pokemonID = await pokemonService.getPokemonID(parseInt(id));
+        if ("Pokemon not found" == pokemonID) {
+            res.status(404);
+        } else {
+            res.status(200).json(pokemonID);
+        }
+    } catch (error) {
+        res.status(404).json(error);
     }
 });
 

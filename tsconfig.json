@@ -2,7 +2,7 @@
     "compilerOptions": {
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "types": ["connect"]
+        "types": ["connect", "node", "mocha"]
     },
     "dependencies": {
         "@types/connect": "^3.4.6"

@@ -21,3 +21,5 @@ const LINK = process.env.URL || 'http://localhost';
 app.listen(PORT, () => {
   logger.info(`Serveur lancé à l\'adresse suivante : ${LINK}${PORT}`);
 });
+
+export default app;
